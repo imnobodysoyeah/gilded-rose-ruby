@@ -1,11 +1,10 @@
-class GildedRose
-  attr_reader :item
+module GildedRose
 
-  def initialize(name:, quality:, days_remaining:)
-    @item = klass_for(name).new(quality, days_remaining)
+  def self.new(name:, quality:, days_remaining:)
+    klass_for(name).new(quality, days_remaining)
   end
 
-  def klass_for(name)
+  def self.klass_for(name)
     case name
     when "Normal Item"
       Normal
@@ -17,70 +16,59 @@ class GildedRose
       Backstage
     end
   end
+end
 
+
+class Normal
+  attr_reader :quality, :days_remaining
+  def initialize(quality, days_remaining)
+    @quality, @days_remaining = quality, days_remaining
+  end
   def tick
-    item.tick
+    @days_remaining -= 1
+    return if @quality == 0
+
+    @quality -= 1
+    @quality -= 1 if @days_remaining <= 0
   end
+end
 
-  def quality
-    item.quality
+class Brie
+  attr_reader :quality, :days_remaining
+  def initialize(quality, days_remaining)
+    @quality, @days_remaining = quality, days_remaining
   end
+  def tick
+    @days_remaining -= 1
+    return if @quality >= 50
 
-  def days_remaining
-    item.days_remaining
+    @quality += 1
+    @quality += 1 if @days_remaining <= 0 && @quality < 50
   end
+end
 
-  class Normal
-    attr_reader :quality, :days_remaining
-    def initialize(quality, days_remaining)
-      @quality, @days_remaining = quality, days_remaining
-    end
-    def tick
-      @days_remaining -= 1
-      return if @quality == 0
-
-      @quality -= 1
-      @quality -= 1 if @days_remaining <= 0
-    end
+class Sulfuras
+  attr_reader :quality, :days_remaining
+  def initialize(quality, days_remaining)
+    @quality, @days_remaining = quality, days_remaining
   end
-
-  class Brie
-    attr_reader :quality, :days_remaining
-    def initialize(quality, days_remaining)
-      @quality, @days_remaining = quality, days_remaining
-    end
-    def tick
-      @days_remaining -= 1
-      return if @quality >= 50
-
-      @quality += 1
-      @quality += 1 if @days_remaining <= 0 && @quality < 50
-    end
+  def tick
   end
+end
 
-  class Sulfuras
-    attr_reader :quality, :days_remaining
-    def initialize(quality, days_remaining)
-      @quality, @days_remaining = quality, days_remaining
-    end
-    def tick
-    end
+class Backstage
+  attr_reader :quality, :days_remaining
+  def initialize(quality, days_remaining)
+    @quality, @days_remaining = quality, days_remaining
   end
+  def tick
+  
+    @days_remaining -= 1
+    return if @quality >= 50
+    return @quality = 0 if @days_remaining < 0
 
-  class Backstage
-    attr_reader :quality, :days_remaining
-    def initialize(quality, days_remaining)
-      @quality, @days_remaining = quality, days_remaining
-    end
-    def tick
-    
-      @days_remaining -= 1
-      return if @quality >= 50
-      return @quality = 0 if @days_remaining < 0
-
-      @quality += 1
-      @quality += 1 if @days_remaining < 10
-      @quality += 1 if @days_remaining < 5
-    end
+    @quality += 1
+    @quality += 1 if @days_remaining < 10
+    @quality += 1 if @days_remaining < 5
   end
 end
