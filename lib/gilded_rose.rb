@@ -29,6 +29,11 @@ class GildedRose
     @item = Brie.new(quality, days_remaining)
     item.tick
   end
+
+  def sulfuras_tick
+    @item = Sulfuras.new(quality, days_remaining)
+    item.tick
+  end
   
   def quality
     return item.quality if item
@@ -68,7 +73,13 @@ class GildedRose
     end
   end
 
-  def sulfuras_tick
+  class Sulfuras
+    attr_reader :quality, :days_remaining
+    def initialize(quality, days_remaining)
+      @quality, @days_remaining = quality, days_remaining
+    end
+    def tick
+    end
   end
 
   def backstage_tick
